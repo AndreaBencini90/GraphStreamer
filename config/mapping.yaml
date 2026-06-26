@@ -1,0 +1,43 @@
+# GraphStreamer - Mapping Configuration
+# Maps audio features to Gephi graph actions
+
+gephi:
+  host: "localhost"
+  port: 8080
+  workspace: "workspace1"
+
+audio:
+  bands:
+    low: [20, 300]
+    mid: [300, 2000]
+    high: [2000, 16000]
+  onset_threshold: 0.4
+
+mapping:
+  beat:
+    action: "pulse_size"
+    node_id: "center"
+    size_min: 5
+    size_max: 40
+    decay_ms: 200
+
+  low:
+    action: "color"
+    node_id: "center"
+    channel: "r"
+    min_val: 0.1
+    max_val: 1.0
+
+  mid:
+    action: "color"
+    node_id: "center"
+    channel: "g"
+    min_val: 0.1
+    max_val: 1.0
+
+  high:
+    action: "color"
+    node_id: "center"
+    channel: "b"
+    min_val: 0.1
+    max_val: 1.0

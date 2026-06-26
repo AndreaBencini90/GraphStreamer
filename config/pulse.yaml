@@ -1,0 +1,23 @@
+# GraphStreamer - Pulse Configuration
+# Controls the force-directed pulsing without music
+
+gephi:
+  host: "localhost"
+  port: 8080
+  workspace: "workspace1"
+
+pulse:
+  # Duration of the performance in seconds
+  duration_seconds: 60
+
+  # Tempo in BPM - the graph pulses at this rhythm
+  bpm: 120
+
+  # Force parameters
+  repulsion_min: 50      # repulsion between beats (nodes contract)
+  repulsion_max: 500     # repulsion on beat (nodes expand)
+  attraction: 0.01       # attraction along edges (keeps graph together)
+  damping: 0.1           # how much force translates to movement (lower = smoother)
+
+  # Frames per second sent to Gephi
+  fps: 30

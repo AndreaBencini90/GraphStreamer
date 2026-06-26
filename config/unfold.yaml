@@ -1,0 +1,17 @@
+# GraphStreamer - Unfold Configuration
+# Nodes start collapsed at center, then appear one by one in their final position
+
+gephi:
+  host: "localhost"
+  port: 8080
+  workspace: "workspace1"
+
+unfold:
+  # Total duration of the animation in seconds
+  duration_seconds: 60
+
+  # How long each node takes to travel from center to final position
+  transition_seconds: 1.0
+
+  # Frames per second
+  fps: 30

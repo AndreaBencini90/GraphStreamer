@@ -36,6 +36,9 @@ python main.py <file_audio.wav>
 | `main.py` | Loop principale — sincronizza audio con Gephi |
 | `audio_analyzer.py` | Analisi audio: beat tracking + bande di frequenza |
 | `gephi_client.py` | Client HTTP per Gephi Graph Streaming Plugin |
+| `unfold.py` | Animazione: nodi partono dal centro e si aprono uno a uno |
+| `pulse.py` | Animazione: grafo pulsa con forze a tempo configurabile |
+| `generate_test_audio.py` | Genera un file WAV di test con beat |
 
 ---
 
@@ -44,6 +47,8 @@ python main.py <file_audio.wav>
 | File | Ruolo |
 |------|-------|
 | `mapping.yaml` | Mappa frequenze/beat → azioni sul grafo (size, colore) |
+| `unfold.yaml` | Config animazione unfold (durata, velocità, fps) |
+| `pulse.yaml` | Config pulsazione a tempo (BPM, forze, durata) |
 
 ---
 

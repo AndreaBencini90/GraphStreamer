@@ -1,38 +1,52 @@
-# GraphStreamer
+# 🎵 GraphStreamer
 
-## Obiettivo del progetto
-GraphStreamer � un progetto dedicato all'analisi e alla visualizzazione di grafi, con focus su strutture network, elaborazione di dati e generazione di output grafici e analitici.
+Grafo che ascolta la musica — beat detection e frequency mapping verso Gephi in tempo reale.
 
-## Analisi funzionale
-Il progetto include le seguenti aree principali:
-- analisi di grafi e reti
-- elaborazione di dati strutturati
-- generazione di visualizzazioni
-- supporto all'esportazione di risultati in formati utili per l'analisi
+---
 
-## Struttura del repository
-- documentazione e guide di setup
-- file di supporto per l'analisi
-- output generati dal progetto
+## 📂 Indice del progetto
 
-## Workflow tipico
-1. Preparare i dati di input
-2. Eseguire l'analisi del grafo
-3. Generare i risultati e le visualizzazioni
-4. Salvare e condividere i file prodotti
+| Cartella | Contenuto |
+|----------|-----------|
+| [`docs/`](docs/INDEX.md) | Documentazione completa (analisi funzionale, architettura, requisiti) |
+| [`src/`](src/) | Codice sorgente Python |
+| [`config/`](config/) | File di configurazione YAML per il mapping audio → azioni |
 
-## Collegamento da un altro PC
+---
+
+## 🚀 Quick Start
+
 ```bash
-git clone https://github.com/AndreaBencini90/GraphStreamer.git
-cd GraphStreamer
+# 1. Installa dipendenze
+pip install -r requirements.txt
+
+# 2. Avvia Master Server in Gephi (Streaming panel → Master → Start)
+
+# 3. Lancia
+cd src
+python main.py <file_audio.wav>
 ```
 
-Se Git richiede autenticazione, usare username GitHub e password oppure un Personal Access Token.
+---
 
-### Aggiornare e inviare modifiche
-```bash
-git pull origin main
-git add .
-git commit -m "Aggiornamento"
-git push origin main
-```
+## 📖 Struttura codice (`src/`)
+
+| File | Ruolo |
+|------|-------|
+| `main.py` | Loop principale — sincronizza audio con Gephi |
+| `audio_analyzer.py` | Analisi audio: beat tracking + bande di frequenza |
+| `gephi_client.py` | Client HTTP per Gephi Graph Streaming Plugin |
+
+---
+
+## ⚙️ Configurazione (`config/`)
+
+| File | Ruolo |
+|------|-------|
+| `mapping.yaml` | Mappa frequenze/beat → azioni sul grafo (size, colore) |
+
+---
+
+## 📚 Documentazione (`docs/`)
+
+→ [Vai all'indice documentazione](docs/INDEX.md)

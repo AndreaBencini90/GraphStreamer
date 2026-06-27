@@ -1,17 +1,112 @@
-# GraphStreamer - Unfold Configuration
-# Nodes start collapsed at center, then appear one by one in their final position
+# =============================================================================
+#  GraphStreamer - Unfold
+#  Anima un grafo Gephi: collassa tutto al centro, poi rivela i nodi in fasi.
+#
+#  Come si usa:
+#    1. Apri Gephi, carica il grafo, applica ForceAtlas, poi STOP layout
+#    2. Avvia il Master Server in Gephi (pannello Streaming)
+#    3. Lancia:  .\venv\Scripts\python src\unfold.py
+#    4. Guarda il grafo prendere forma in Gephi
+#
+#  Per aggiornare il layout: metti refresh_positions: true e rilancia una volta
+# =============================================================================
 
 gephi:
   host: "localhost"
   port: 8080
-  workspace: "workspace1"
+  workspace: "love_phases"   # nome del workspace Gephi (tutto minuscolo, senza spazi)
+
+
+# =============================================================================
+#  PARAMETRI DA GIOCARE
+# =============================================================================
 
 unfold:
-  # Total duration of the animation in seconds
-  duration_seconds: 60
 
-  # How long each node takes to travel from center to final position
-  transition_seconds: 1.0
+  # --- TRANSIZIONE SINGOLO NODO ---
+  # Quanto tempo impiega un nodo a spostarsi dal centro alla sua posizione finale.
+  # Valori tipici: 0.5 (scatto rapido) | 2.0 (volo fluido) | 5.0 (lentissimo)
+  # Piu' alto = ogni nodo e' piu' visibile nel suo percorso
+  transition_seconds: 3.0
 
-  # Frames per second
-  fps: 30
+
+  # --- FASI ---
+  # Ogni fase definisce UNA VELOCITA' di uscita per un certo tempo.
+  # I nodi vengono assegnati alle fasi in ordine: prima fase = primi N nodi, ecc.
+  #
+  # nodes_per_second: quanti nodi PARTONO ogni secondo in questa fase
+  #   0.5  -> un nodo ogni 2 secondi  (quasi fermo)
+  #   1    -> un nodo al secondo      (lento, si vede ogni movimento)
+  #   10   -> dieci al secondo        (flusso medio)
+  #   50   -> cinquanta al secondo    (cascata)
+  #   200  -> quasi istantaneo        (esplosione)
+  #
+  # duration_seconds: per quanti secondi dura questa velocita'
+  #   Il numero di nodi "consumati" in una fase = nodes_per_second x duration_seconds
+  #   Se i nodi finiscono prima, la fase si interrompe.
+  #   Se avanzano nodi dopo l'ultima fase, vengono aggiunti alla fine.
+  #
+  # label_groups: lista di valori del campo Molecule che appartengono a questa fase.
+  #   I nodi il cui campo Molecule corrisponde a uno di questi valori vengono rivelati
+  #   in questa fase, nell'ordine delle fasi definite qui sotto.
+  #   Richiede refresh_positions: true almeno una volta per leggere i dati da Gephi.
+  #
+  # Esempi di strutture alternative:
+  #
+  #   Apertura zen (tre nodi poi esplosione):
+  #     - nodes_per_second: 0.3 / duration_seconds: 10   -> 3 nodi in 10 sec
+  #     - nodes_per_second: 100 / duration_seconds: 10   -> tutto il resto
+  #
+  #   Respiro (lento-veloce-lento-esplosione):
+  #     - nodes_per_second: 1  / duration_seconds: 10
+  #     - nodes_per_second: 20 / duration_seconds: 5
+  #     - nodes_per_second: 1  / duration_seconds: 10
+  #     - nodes_per_second: 80 / duration_seconds: 10
+  #
+  # Campo del nodo Gephi usato per i gruppi (deve corrispondere a un attributo del grafo)
+  group_by: "Molecule"
+
+  phases:
+    # FASE 1 - DESIDERIO
+    # GnRH: accende l'asse ormonale, il segnale primordiale
+    # Sostanza P: il dolore come soglia, il corpo che inizia a parlare
+    - label_groups: ["GnRH", "Sostanza P"]
+      nodes_per_second: 1
+      duration_seconds: 20
+
+    # FASE 2 - ATTRAZIONE
+    # CRF: l'eccitazione come stress, il sistema di allerta attivato
+    # Menk-PC e Menk-Bic: risposta oppioide, modulazione fine del desiderio
+    - label_groups: ["CRF", "Menk-PC", "Menk-Bic"]
+      nodes_per_second: 5
+      duration_seconds: 20
+
+    # FASE 3 - LEGAME
+    # Ossitocina + Vasopressina: riconoscimento e attaccamento
+    # Beta-Endorfina: euforia, il senso di completezza
+    - label_groups: ["Ossitocina", "Vasopressina", "Beta-Endorfina"]
+      nodes_per_second: 20
+      duration_seconds: 20
+
+
+# =============================================================================
+#  PARAMETRI TECNICI (raramente serve modificarli)
+# =============================================================================
+
+  # Frequenza aggiornamenti inviati a Gephi (frame al secondo).
+  # 10 e' sufficiente per un'animazione fluida senza stressare la rete locale.
+  fps: 10
+
+  # Moltiplicatore scala posizioni.
+  # 1 = usa le coordinate originali di Gephi.
+  # 2 = raddoppia le distanze (grafo piu' aperto).
+  scale: 1
+
+  # File dove vengono salvate le posizioni dei nodi.
+  snapshot_file: "unfold_positions.json"
+
+  # true  = rilegge il layout corrente da Gephi e aggiorna lo snapshot
+  # false = usa lo snapshot salvato (default, piu' veloce da lanciare)
+  # Metti true quando cambi ForceAtlas o hai bisogno di aggiornare i dati molecola.
+  # Dopo la prima lettura riuscita, rimetti false.
+  refresh_positions: true

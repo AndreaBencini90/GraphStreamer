@@ -11,11 +11,10 @@ import yaml
 
 def get_graph(base_url):
     """Read current graph from Gephi streaming endpoint."""
+    nodes = {}
+    edges = {}
     try:
-        r = requests.get(f"{base_url}?operation=getGraph", timeout=5, stream=True)
-        # The endpoint streams JSON events, we collect them
-        nodes = {}
-        edges = {}
+        r = requests.get(f"{base_url}?operation=getGraph", timeout=(3, 2), stream=True)
         for line in r.iter_lines(decode_unicode=True):
             if not line:
                 continue
@@ -26,10 +25,11 @@ def get_graph(base_url):
             if "ae" in data:
                 for eid, attrs in data["ae"].items():
                     edges[eid] = attrs
-        return nodes, edges
+    except requests.exceptions.ReadTimeout:
+        pass  # stream ended by timeout — that's expected
     except Exception as e:
         print(f"Errore lettura grafo: {e}")
-        return {}, {}
+    return nodes, edges
 
 
 def compute_forces(nodes, edges, repulsion, attraction):

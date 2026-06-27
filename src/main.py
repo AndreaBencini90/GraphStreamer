@@ -72,5 +72,5 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python main.py <audio_file.wav>")
         sys.exit(1)
-    config = sys.argv[2] if len(sys.argv) > 2 else "../config/mapping.yaml"
+    config = sys.argv[2] if len(sys.argv) > 2 else "config/mapping.yaml"
     run(sys.argv[1], config)

@@ -1,91 +1,87 @@
-# 🧪 Guida Test MVP — GraphStreamer
+# Guida Test — GraphStreamer
 
-Questa guida spiega come far girare il progetto per la prima volta su Windows.
+Come provare il progetto su Windows.
 
 ---
 
 ## Prerequisiti
 
-- **Python 3.8+** installato e disponibile da terminale (`python --version`)
-- **Gephi** aperto con il **Graph Streaming Plugin** installato
-- Un **file audio** in formato `.wav` (anche breve, 30 secondi bastano)
-
-> Se non hai un .wav sotto mano, puoi convertire un mp3 con: `ffmpeg -i canzone.mp3 canzone.wav`
-> Oppure scarica un sample gratuito da https://freesound.org
+- Python 3.8+ (usa `py` su Windows)
+- Gephi con Graph Streaming Plugin installato
+- Repository clonato in locale
 
 ---
 
 ## Step 1 — Setup ambiente Python
 
 ```bash
-cd c:\Users\048115571\Documents\GraphStreamer
+cd c:\Users\benci\Documents\GraphArte\GraphStreamer
 
-# Crea virtual environment
-python -m venv .venv
+py -m venv venv
 
-# Attiva il virtual environment
-.venv\Scripts\activate
-
-# Installa dipendenze
-pip install -r requirements.txt
+.\venv\Scripts\python -m pip install -r requirements.txt
 ```
 
-Verifica che funzioni:
+Verifica:
 ```bash
-python -c "import librosa; import requests; import yaml; print('OK')"
+.\venv\Scripts\python -c "import librosa; import requests; import yaml; print('OK')"
 ```
-
-Se stampa `OK` sei a posto.
 
 ---
 
 ## Step 2 — Prepara Gephi
 
-1. Apri Gephi
-2. Crea un nuovo progetto (File → New Project)
-3. **Rinomina il workspace** in `workspace1` (doppio click sulla tab del workspace in alto)
-4. Vai nel pannello **Streaming** (in basso a sinistra/destra)
-5. Espandi **Master** → **Master Server**
-6. **Avvia** il Master Server (tasto destro → Start, o pulsante ▶)
+1. Apri Gephi e carica il tuo file `.gephi` / `.graphml` / `.gexf`
+2. Applica ForceAtlas per posizionare i nodi, poi **fermalo** (pannello Layout → Stop)
+3. Vai nel pannello **Streaming** → espandi **Master** → **Master Server** → **Start**
+4. Verifica: apri browser su `http://localhost:8080/love_phases?operation=getGraph`
+   - La pagina resta in caricamento = OK
+   - Errore 404 = workspace nome sbagliato o server spento
 
-**Verifica:** apri il browser e vai su:
-```
-http://localhost:8080/workspace1?operation=getGraph
-```
-La pagina deve restare in caricamento (non errore 404). Se carica all'infinito = funziona.
+> Il workspace si chiama `love_phases` (tutto minuscolo, senza spazi).
+> Se lo hai rinominato dopo aver avviato il server: Stop → Start.
 
 ---
 
-## Step 3 — Test connessione manuale
+## Step 3 — Testa la connessione
 
-Dal terminale (con il venv attivo):
 ```bash
-curl "http://localhost:8080/workspace1?operation=updateGraph" -d "{\"an\":{\"test\":{\"label\":\"Test\",\"size\":20,\"r\":1,\"g\":0,\"b\":0,\"x\":0,\"y\":0}}}"
+.\venv\Scripts\python -c "import requests; r=requests.get('http://localhost:8080/love_phases?operation=getGraph', timeout=(3,2), stream=True); print('Connesso OK')"
 ```
 
-Guarda Gephi: deve comparire un nodo rosso chiamato "Test". Se lo vedi, la connessione è OK.
-
-> In Gephi potrebbe servire cliccare **Reset Zoom** (lente in basso a sinistra) per centrare la vista sul nodo.
+Se stampa "Connesso OK" sei pronto.
 
 ---
 
-## Step 4 — Lancia GraphStreamer
+## Step 4a — Lancia Unfold (animazione grafo)
 
 ```bash
-cd src
-python main.py "C:\percorso\al\tuo\file.wav"
+.\venv\Scripts\python src\unfold.py
 ```
 
-Sostituisci il percorso con il tuo file audio reale.
+Guarda Gephi: tutti i nodi collassano al centro, poi si rivelano in tre fasi (desiderio → attrazione → legame).
 
-**Cosa devi vedere:**
-- Nel terminale: `Analyzing: ...` poi `Streaming X frames to Gephi`
-- In Gephi: il nodo **pulsa** (diventa grande sui beat, piccolo tra i beat) e **cambia colore** in base alle frequenze:
-  - 🔴 Rosso = bassi (kick, basso)
-  - 🟢 Verde = medi (voce, chitarra)
-  - 🔵 Blu = acuti (hi-hat, piatti)
+Configurazione in `config/unfold.yaml`.
 
-Premi `Ctrl+C` nel terminale per fermare.
+---
+
+## Step 4b — Lancia Pulse (pulsazione ritmica)
+
+```bash
+.\venv\Scripts\python src\pulse.py
+```
+
+Il grafo pulsa a BPM configurabili. Configurazione in `config/pulse.yaml`.
+
+---
+
+## Step 4c — Lancia con audio (main.py)
+
+```bash
+.\venv\Scripts\python src\main.py percorso\al\file.wav
+```
+
+Il grafo reagisce ai beat e alle frequenze dell'audio. Configurazione in `config/mapping.yaml`.
 
 ---
 
@@ -93,17 +89,8 @@ Premi `Ctrl+C` nel terminale per fermare.
 
 | Problema | Soluzione |
 |----------|-----------|
-| `ModuleNotFoundError` | Hai attivato il venv? `.venv\Scripts\activate` |
-| Nodo non appare in Gephi | Master Server è attivo? Workspace si chiama `workspace1`? |
-| `Connection refused` | Gephi non è aperto o il server è spento |
-| Nodo non pulsa / colore fisso | Il file audio è troppo corto o silenzioso, prova un brano ritmato |
-| `librosa` errore su `.mp3` | Installa ffmpeg: `pip install ffmpeg-python` oppure usa un `.wav` |
-
----
-
-## Prossimi passi
-
-Quando il test funziona:
-1. Prova con brani diversi (elettronica, classica, rock) per vedere come reagisce
-2. Modifica `config/mapping.yaml` per cambiare soglie e range di colore
-3. Aggiungi più nodi al grafo in Gephi prima di lanciare — vedrai il nodo "center" pulsare in mezzo agli altri
+| `ModuleNotFoundError` | Usa `.\venv\Scripts\python`, non `python` |
+| Nodi non si muovono | ForceAtlas ancora attivo in Gephi? Fermalo. |
+| "Nessun nodo trovato" | Carica un grafo in Gephi prima di lanciare |
+| Errore 404 sul workspace | Il workspace si chiama `love_phases`? Master Server attivo? |
+| label_groups conta 0 nodi | Esegui una volta con `refresh_positions: true` per leggere i dati molecola |

@@ -1,6 +1,4 @@
-# 📚 Documentazione GraphStreamer
-
-Indice dei documenti in questa cartella:
+# Documentazione GraphStreamer
 
 | # | Documento | Descrizione |
 |---|-----------|-------------|
@@ -9,4 +7,4 @@ Indice dei documenti in questa cartella:
 | 3 | [03_requisiti_tecnici.md](03_requisiti_tecnici.md) | Dipendenze, setup ambiente, checklist |
 | 4 | [SETUP_OTHER_PC.md](SETUP_OTHER_PC.md) | Come clonare e configurare su un altro PC |
 | 5 | [GUIDA_TEST.md](GUIDA_TEST.md) | Come provare il progetto step-by-step |
-| 6 | [GUIDA_UNFOLD.md](GUIDA_UNFOLD.md) | **Come provare l'animazione unfold (nodi che si aprono)** |
+| 6 | [GUIDA_UNFOLD.md](GUIDA_UNFOLD.md) | Animazione unfold: nodi che si aprono in fasi (narrativa amore) |

@@ -4,7 +4,7 @@
 gephi:
   host: "localhost"
   port: 8080
-  workspace: "workspace1"
+  workspace: "love_phases"
 
 pulse:
   # Duration of the performance in seconds
@@ -20,4 +20,4 @@ pulse:
   damping: 0.1           # how much force translates to movement (lower = smoother)
 
   # Frames per second sent to Gephi
-  fps: 30
+  fps: 1

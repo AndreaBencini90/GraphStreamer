@@ -1,0 +1,113 @@
+# =============================================================================
+#  GraphStreamer - Unfold Spiral — Spirale Temporale
+#  14.999 nodi / 8 ere geologiche / da 4,5 miliardi di anni fa a oggi
+#
+#  Durata animazione: ~60 secondi
+#  Ogni era dura in proporzione al suo arco temporale reale
+#  (il numero di nodi e' proporzionale all'arco di tempo dell'era)
+#
+#  Uso:
+#    .\venv\Scripts\python src\unfold_spiral.py
+# =============================================================================
+
+gephi:
+  host: "localhost"
+  port: 8080
+  workspace: "spirale_15000_nodi"
+
+unfold:
+
+  # Campo nodo Gephi usato per separare i gruppi sulla spirale
+  group_by: "era"
+
+  # Durata animazione singolo nodo (centro -> posizione spirale)
+  transition_seconds: 1.0
+
+  fps: 10
+
+  snapshot_file: "spiral_positions.json"
+
+  # true = ricalcola la spirale leggendo da Gephi (necessario alla prima run)
+  # false = usa snapshot salvato
+  refresh_positions: false
+  position_source: "gephi"
+
+  # Pausa (secondi) dopo il collapse prima che parta la rivelazione
+  initial_delay: 2.0
+
+
+  # ---------------------------------------------------------------------------
+  #  SPIRALE — geometria
+  # ---------------------------------------------------------------------------
+  spiral:
+    r_min: 30
+    r_max: 1200
+    turns: 5
+
+    # Gap visivo tra un'era e la successiva (gradi)
+    gap_angle_deg: 15
+
+    # Rotazione iniziale: -90 = la spirale parte dall'alto
+    rotation_deg: -90
+
+
+  # ---------------------------------------------------------------------------
+  #  FASI — stessa velocita' per tutte le ere
+  #
+  #  Velocita' costante = durata proporzionale al numero di nodi
+  #                     = durata proporzionale all'arco temporale reale
+  #
+  #  265 nodi/sec * ~56.5s = 14.999 nodi
+  #  7 gap da 0.5s = 3.5s
+  #  Totale: ~60 secondi
+  # ---------------------------------------------------------------------------
+
+  phases:
+
+    # 4.500.000.000 — 3.800.000.000 anni fa  (2.334 nodi = 15.6% del tempo)
+    - label_groups: ["terra_primordiale"]
+      nodes_per_second: 500
+      duration_seconds: 600
+      gap_seconds: 0.5
+
+    # 3.800.000.000 — 2.400.000.000 anni fa  (4.666 nodi = 31.1%)
+    - label_groups: ["batteri"]
+      nodes_per_second: 500
+      duration_seconds: 600
+      gap_seconds: 0.5
+
+    # 2.400.000.000 — 600.000.000 anni fa  (6.000 nodi = 40%)
+    - label_groups: ["ossigeno"]
+      nodes_per_second: 500
+      duration_seconds: 600
+      gap_seconds: 0.5
+
+    # 600.000.000 — 230.000.000 anni fa  (1.234 nodi = 8.2%)
+    - label_groups: ["multicellulari"]
+      nodes_per_second: 500
+      duration_seconds: 600
+      gap_seconds: 0.5
+
+    # 230.000.000 — 66.000.000 anni fa  (546 nodi = 3.6%)
+    - label_groups: ["dinosauri"]
+      nodes_per_second: 500
+      duration_seconds: 600
+      gap_seconds: 0.5
+
+    # 66.000.000 — 4.200.000 anni fa  (207 nodi = 1.4%)
+    - label_groups: ["post_dinosauri"]
+      nodes_per_second: 500
+      duration_seconds: 600
+      gap_seconds: 0.5
+
+    # 3.900.000 — 900.000 anni fa  (11 nodi = 0.07%)
+    - label_groups: ["ominidi"]
+      nodes_per_second: 500
+      duration_seconds: 600
+      gap_seconds: 0.5
+
+    # 300.000 anni fa  (1 nodo solo)
+    - label_groups: ["homo_sapiens"]
+      nodes_per_second: 500
+      duration_seconds: 600
+      gap_seconds: 0

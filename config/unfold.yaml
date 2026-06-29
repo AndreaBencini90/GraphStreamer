@@ -14,7 +14,7 @@
 gephi:
   host: "localhost"
   port: 8080
-  workspace: "love_phases"   # nome del workspace Gephi (tutto minuscolo, senza spazi)
+  workspace: "spirale_temporale"   # nome del workspace Gephi (tutto minuscolo, senza spazi)
 
 
 # =============================================================================

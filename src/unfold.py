@@ -24,7 +24,7 @@ def get_graph(base_url):
             if "ae" in data:
                 for eid, attrs in data["ae"].items():
                     edges[eid] = attrs
-    except requests.exceptions.ReadTimeout:
+    except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError):
         pass
     except Exception as e:
         print(f"Errore lettura grafo: {e}")
@@ -61,7 +61,7 @@ def order_nodes_by_groups(node_ids, labels, phases):
             if nid in assigned:
                 continue
             label = labels.get(nid, "").lower()
-            if any(g.lower() in label for g in groups):
+            if any(label == g.lower() for g in groups):
                 group_nodes.append(nid)
                 assigned.add(nid)
         ordered.extend(group_nodes)
